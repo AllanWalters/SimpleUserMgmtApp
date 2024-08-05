@@ -8,12 +8,10 @@ phases:
     commands:
       - echo Entered the pre_build phase...
       - mvn clean
+      - echo "Setting JAVA_HOME environment variable"
       - export JAVA_HOME=/usr/lib/jvm/java-11-amazon-corretto
       - export PATH=$JAVA_HOME/bin:$PATH
       - java -version
-      - system_info
-      - run-commands:
-          - mvn clean
   build:
     commands:
       - echo Entered the build phase...
