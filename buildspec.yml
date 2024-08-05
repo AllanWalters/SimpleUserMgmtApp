@@ -4,7 +4,6 @@ phases:
   install:
     runtime-versions:
       java: 11
-      docker: 18
   pre_build:
     commands:
       - echo Entered the pre-build phase...
@@ -18,7 +17,7 @@ phases:
       # ECR integration
       - aws --version
       - $(aws ecr get-login --no-include-email)
-      - REPOSITORY_URI=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/cicd_sample_app_5_ecr
+      - REPOSITORY_URI=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${ECR_REPOSITORY_NAME}
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
       - echo Logging in to Amazon ECR...
