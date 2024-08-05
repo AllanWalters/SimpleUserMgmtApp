@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: 11
+  pre_build:
+    commands:
+      - echo Entered the pre_build phase...
+      - mvn clean
+  build:
+    commands:
+      - echo Entered the build phase...
+      - mvn install
+  post_build:
+    commands:
+      - echo Entered the post_build phase...
+      - mvn test
+      - mvn integration-test
+artifacts:
+  files:
+    - target/*.jar
+  base-directory: target
+cache:
+  paths:
+    - '/root/.m2/**/*'
