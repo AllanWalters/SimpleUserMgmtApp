@@ -4,9 +4,10 @@ phases:
   install:
     runtime-versions:
       java: 11
+      docker: 18
   pre_build:
     commands:
-      - echo Entered the pre_build phase...
+      - echo Entered the pre-build phase...
       - which java
       - java -version
       - echo "Setting JAVA_HOME environment variable"
@@ -14,19 +15,34 @@ phases:
       - export PATH=$JAVA_HOME/bin:$PATH
       - mvn --version
       - mvn clean
+      # ECR integration
+      - aws --version
+      - $(aws ecr get-login --no-include-email)
+      - REPOSITORY_URI=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/cicd_sample_app_5_ecr
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
+      - echo Logging in to Amazon ECR...
+      - echo Building the Docker image...
   build:
     commands:
       - echo Entered the build phase...
       - mvn install
+      - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
-      - echo Entered the post_build phase...
+      - echo Entered the post-build phase...
       - mvn test
       - mvn integration-test
+      - printf '[{"name":"my-spring-boot-app","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+
 artifacts:
   files:
+    - Dockerfile
     - target/*.jar
-  base-directory: target
+    - imagedefinitions.json
+  base-directory: .
+
 cache:
   paths:
     - '/root/.m2/**/*'
