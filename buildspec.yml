@@ -10,8 +10,9 @@ phases:
       - which java
       - java -version
       - echo "Setting JAVA_HOME environment variable"
-      - export JAVA_HOME=/usr/lib/jvm/java-11-amazon-corretto
+      - export JAVA_HOME=/usr/lib/jvm/java-11
       - export PATH=$JAVA_HOME/bin:$PATH
+      - mvn --version
       - mvn clean
   build:
     commands:
