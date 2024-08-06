@@ -16,9 +16,9 @@ phases:
       - mvn clean
       # ECR integration
       - aws --version
-      - REPOSITORY_URI=${ECR_REPO}
+      - REPOSITORY_URI=513461903764.dkr.ecr.us-west-2.amazonaws.com/cicd_sample_app_5_ecr
       - echo Logging in to Amazon ECR.....
-      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
+      - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin $REPOSITORY_URI
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
   build:
