@@ -24,6 +24,8 @@ phases:
       - mvn test
       - mvn integration-test
       - printf '[{"name":"my-spring-boot-app","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+      - cat imagedefinitions.json
+      - chmod 644 imagedefinitions.json
 
 artifacts:
   files:
