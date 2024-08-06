@@ -35,7 +35,7 @@ phases:
 artifacts:
   files:
     - target/*.jar
-    - target/imagedefinitions.json
+    - imagedefinitions.json
   base-directory: target
 
 cache:
