@@ -1,5 +1,9 @@
 version: 0.2
 
+env:
+  variables:
+    APP_VERSION: BIGV1.0
+
 phases:
   install:
     runtime-versions:
@@ -18,6 +22,7 @@ phases:
       - REPOSITORY_URI=513461903764.dkr.ecr.us-west-2.amazonaws.com/cicd_sample_app_5_ecr
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
+      - echo "Setting application version to $APP_VERSION"
   build:
     commands:
       - echo Entered the build phase...
