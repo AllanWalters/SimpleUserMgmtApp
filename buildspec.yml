@@ -14,32 +14,20 @@ phases:
       - export PATH=$JAVA_HOME/bin:$PATH
       - mvn --version
       - mvn clean
-      # ECR integration
-      - aws --version
-      - REPOSITORY_URI=513461903764.dkr.ecr.us-west-2.amazonaws.com/cicd_sample_app_5_ecr
-      - echo Logging in to Amazon ECR.....
-      - aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin $REPOSITORY_URI
-      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - IMAGE_TAG=${COMMIT_HASH:=latest}
   build:
     commands:
       - echo Entered the build phase...
-      - mvn install
-      - docker build --platform linux/amd64 -t $REPOSITORY_URI:$IMAGE_TAG .
-      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - mvn package
   post_build:
     commands:
       - echo Entered the post-build phase...
       - mvn test
       - mvn integration-test
-      - printf '[{"name":"my-spring-boot-app","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 
 artifacts:
   files:
-    - Dockerfile
     - target/*.jar
-    - imagedefinitions.json
-  base-directory: .
+  base-directory: target
 
 cache:
   paths:
