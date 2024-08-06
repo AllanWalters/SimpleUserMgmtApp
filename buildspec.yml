@@ -23,10 +23,12 @@ phases:
       - echo Entered the post-build phase...
       - mvn test
       - mvn integration-test
+      - printf '[{"name":"my-spring-boot-app","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 
 artifacts:
   files:
     - target/*.jar
+    - imagedefinitions.json
   base-directory: target
 
 cache:
