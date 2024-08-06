@@ -16,13 +16,16 @@ phases:
       - mvn clean
       # ECR integration
       - aws --version
-      - aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
-      - REPOSITORY_URI=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/cicd_sample_app_5_ecr
+      - REPOSITORY_URI=${ECR_REPO}
+      - echo Logging in to Amazon ECR.....
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
-      - echo Logging in to Amazon ECR...
-      - echo Building the Docker image...
-      - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
+  build:
+    commands:
+      - echo Entered the build phase...
+      - mvn install
+      - docker build --platform linux/amd64 -t $REPOSITORY_URI:$IMAGE_TAG .
       - docker push $REPOSITORY_URI:$IMAGE_TAG
   post_build:
     commands:
