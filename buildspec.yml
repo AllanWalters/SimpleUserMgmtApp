@@ -22,19 +22,20 @@ phases:
     commands:
       - echo Entered the build phase...
       - mvn package
-  post_build:
-    commands:
+ post_build:
+  commands:
     - echo Entered the post-build phase...
     - mvn test
     - mvn integration-test
     - printf '[{"name":"my-spring-boot-app","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > target/imagedefinitions.json
     - cat target/imagedefinitions.json
     - chmod 644 target/imagedefinitions.json
+    - ls -l target
 
 artifacts:
   files:
     - target/*.jar
-    - imagedefinitions.json
+    - target/imagedefinitions.json
   base-directory: target
 
 cache:
