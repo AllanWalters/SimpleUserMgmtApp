@@ -14,6 +14,10 @@ phases:
       - export PATH=$JAVA_HOME/bin:$PATH
       - mvn --version
       - mvn clean
+      - aws --version
+      - REPOSITORY_URI=513461903764.dkr.ecr.us-west-2.amazonaws.com/cicd_sample_app_5_ecr
+      - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+      - IMAGE_TAG=${COMMIT_HASH:=latest}
   build:
     commands:
       - echo Entered the build phase...
