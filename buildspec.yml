@@ -4,6 +4,7 @@ env:
   variables:
     APP_VERSION: BIGV1.0
     APP_NAME: my-spring-boot-app
+    S3_BUCKET: big44
 
 phases:
   install:
@@ -36,11 +37,11 @@ phases:
       - printf '[{"name":"%s","imageUri":"%s"}]' "$APP_NAME" $REPOSITORY_URI:$IMAGE_TAG > target/$APP_NAME-imagedefinitions.json
       - mv target/*.jar target/application.jar
       - chmod 644 target/application.jar
+      - aws s3 cp target/application.jar s3://$S3_BUCKET/$APP_NAME-$APP_VERSION.jar
       - ls -l target
 
 artifacts:
   files:
-    - target/application.jar
     - target/*imagedefinitions.json
   base-directory: target
 
