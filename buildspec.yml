@@ -34,8 +34,8 @@ phases:
       - mvn test
       - mvn integration-test
       - printf '[{"name":"%s","imageUri":"%s"}]' "$APP_NAME" $REPOSITORY_URI:$IMAGE_TAG > target/$APP_NAME-imagedefinitions.json
-      - cp target/$APP_NAME.jar target/application.jar
-      - chmod 644 target/$APP_NAME.jar
+      - mv target/*.jar target/application.jar
+      - chmod 644 target/application.jar
       - ls -l target
 
 artifacts:
