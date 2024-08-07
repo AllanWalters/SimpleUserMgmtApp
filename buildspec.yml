@@ -3,6 +3,7 @@ version: 0.2
 env:
   variables:
     APP_VERSION: BIGV1.0
+    APP_NAME: my-spring-boot-app
 
 phases:
   install:
@@ -23,8 +24,6 @@ phases:
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
       - echo "Setting application version to $APP_VERSION"
-      - ls -l
-      - pwd
   build:
     commands:
       - echo Entered the build phase...
@@ -34,16 +33,15 @@ phases:
       - echo Entered the post-build phase...
       - mvn test
       - mvn integration-test
-      - printf '[{"name":"my-spring-boot-app","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > target/imagedefinitions.json
-      - cat target/imagedefinitions.json
-      - chmod 644 target/imagedefinitions.json
+      - printf '[{"name":"%s","imageUri":"%s"}]' "$APP_NAME" $REPOSITORY_URI:$IMAGE_TAG > target/$APP_NAME-imagedefinitions.json
+      - cp target/$APP_NAME.jar target/application.jar
+      - chmod 644 target/$APP_NAME.jar
       - ls -l target
-      - pwd
 
 artifacts:
   files:
-    - target/*.jar
-    - imagedefinitions.json
+    - target/application.jar
+    - target/$APP_NAME-imagedefinitions.json
   base-directory: target
 
 cache:
