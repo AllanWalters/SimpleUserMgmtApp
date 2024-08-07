@@ -1,11 +1,5 @@
 version: 0.2
 
-env:
-  variables:
-    APP_VERSION: BIGV1.0
-    APP_NAME: my-spring-boot-app
-    S3_BUCKET: big44
-
 phases:
   install:
     runtime-versions:
@@ -24,26 +18,23 @@ phases:
       - REPOSITORY_URI=513461903764.dkr.ecr.us-west-2.amazonaws.com/cicd_sample_app_5_ecr
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
-      - echo "Setting application version to $APP_VERSION"
   build:
     commands:
       - echo Entered the build phase...
       - mvn package
   post_build:
     commands:
-      - echo Entered the post-build phase...
-      - mvn test
-      - mvn integration-test
-      - printf '[{"name":"%s","imageUri":"%s"}]' "$APP_NAME" $REPOSITORY_URI:$IMAGE_TAG > target/$APP_NAME-imagedefinitions.json
-      - mv target/*.jar target/application.jar
-      - chmod 644 target/application.jar
-      - aws s3 cp target/application.jar s3://$S3_BUCKET/$APP_NAME-$APP_VERSION.jar
-      - ls -l target
+    - echo Entered the post-build phase...
+    - mvn test
+    - mvn integration-test
+    - printf '[{"name":"my-spring-boot-app","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > target/imagedefinitions.json
+    - cat target/imagedefinitions.json
+    - chmod 644 target/imagedefinitions.json
 
 artifacts:
   files:
-    - target/application.jar
-    - target/$APP_NAME-imagedefinitions.json
+    - target/*.jar
+    - imagedefinitions.json
   base-directory: target
 
 cache:
