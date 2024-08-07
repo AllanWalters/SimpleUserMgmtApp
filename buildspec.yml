@@ -23,6 +23,8 @@ phases:
       - COMMIT_HASH=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
       - IMAGE_TAG=${COMMIT_HASH:=latest}
       - echo "Setting application version to $APP_VERSION"
+      - ls -l
+      - pwd
   build:
     commands:
       - echo Entered the build phase...
@@ -36,6 +38,7 @@ phases:
       - cat target/imagedefinitions.json
       - chmod 644 target/imagedefinitions.json
       - ls -l target
+      - pwd
 
 artifacts:
   files:
