@@ -3,6 +3,7 @@ version: 0.2
 env:
   variables:
     APP_VERSION: BIGV1.0
+    APP_NAME: my-spring-boot-app
 
 phases:
   install:
@@ -32,15 +33,19 @@ phases:
       - echo Entered the post-build phase...
       - mvn test
       - mvn integration-test
-      - printf '[{"name":"my-spring-boot-app","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > target/imagedefinitions.json
+      - printf '[{"name":"%s","imageUri":"%s"}]' "$APP_NAME" $REPOSITORY_URI:$IMAGE_TAG > target/$APP_NAME-imagedefinitions.json
+      - cp target/$APP_NAME-imagedefinitions.json target/imagedefinitions.json
+      - cat target/$APP_NAME-imagedefinitions.json
       - cat target/imagedefinitions.json
+      - chmod 644 target/$APP_NAME-imagedefinitions.json
       - chmod 644 target/imagedefinitions.json
       - ls -l target
 
 artifacts:
   files:
     - target/*.jar
-    - imagedefinitions.json
+    - target/$APP_NAME-imagedefinitions.json
+    - target/imagedefinitions.json
   base-directory: target
 
 cache:
