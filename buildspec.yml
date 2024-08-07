@@ -42,7 +42,7 @@ phases:
 
 artifacts:
   files:
-    - target/*imagedefinitions.json
+    - target/$APP_NAME-imagedefinitions.json
   base-directory: target
 
 cache:
