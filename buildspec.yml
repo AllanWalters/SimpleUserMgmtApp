@@ -31,7 +31,6 @@ phases:
       - echo Entered the post-build phase...
       - mvn test
       - mvn integration-test
-      - echo "web: java -jar application.jar" > Procfile
 
 artifacts:
   files:
