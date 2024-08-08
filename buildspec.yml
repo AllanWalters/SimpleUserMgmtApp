@@ -9,7 +9,6 @@ phases:
   install:
     runtime-versions:
       java: 11
-      python: 3.8
   pre_build:
     commands:
       - echo Entered the pre-build phase...
@@ -35,14 +34,13 @@ phases:
       - touch Procfile
       - echo "web: java -jar application.jar" >> Procfile
       - |
-        python3 <<EOF
-        import json
-        image_definition = {
+        cat <<EOF > target/$APP_NAME-imagedefinitions.json
+        [
+          {
             "name": "$APP_NAME",
             "imageUri": "$REPOSITORY_URI:$IMAGE_TAG"
-        }
-        with open("target/$APP_NAME-imagedefinitions.json", "w") as f:
-            json.dump([image_definition], f)
+          }
+        ]
         EOF
 
 artifacts:
