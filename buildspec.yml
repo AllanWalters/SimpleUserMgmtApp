@@ -32,7 +32,7 @@ phases:
       - mvn test
       - mvn integration-test
       - echo "web: java -jar application.jar" > Procfile
-      - echo "[{\"name\":\"$APP_NAME\",\"imageUri\":\"$REPOSITORY_URI:$IMAGE_TAG\"}]" > target/$APP_NAME-imagedefinitions.json
+      - printf '[{"name":"%s","imageUri":"%s"}]' "$APP_NAME" "$REPOSITORY_URI:$IMAGE_TAG" > target/$APP_NAME-imagedefinitions.json
 
 artifacts:
   files:
