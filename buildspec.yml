@@ -4,7 +4,7 @@ env:
   variables:
     APP_VERSION: BIGV1.0
     APP_NAME: my-spring-boot-app
-
+    
 phases:
   install:
     runtime-versions:
@@ -31,20 +31,9 @@ phases:
       - echo Entered the post-build phase...
       - mvn test
       - mvn integration-test
-      - touch Procfile
-      - echo "web: java -jar application.jar" >> Procfile
-      - |
-        cat <<EOF > target/$APP_NAME-imagedefinitions.json
-        [
-          {
-            "name": "$APP_NAME",
-            "imageUri": "$REPOSITORY_URI:$IMAGE_TAG"
-          }
-        ]
-        EOF
+      - echo "web: java -jar application.jar" > Procfile
 
 artifacts:
   files:
     - '*.jar'
     - Procfile
-    - target/$APP_NAME-imagedefinitions.json
