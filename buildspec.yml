@@ -9,6 +9,7 @@ phases:
   install:
     runtime-versions:
       java: 11
+      python: 3.9
   pre_build:
     commands:
       - echo Entered the pre-build phase...
@@ -31,8 +32,17 @@ phases:
       - echo Entered the post-build phase...
       - mvn test
       - mvn integration-test
-      - echo "web: java -jar application.jar" > Procfile
-      - printf '[{"name":"%s","imageUri":"%s"}]' "$APP_NAME" "$REPOSITORY_URI:$IMAGE_TAG" > target/$APP_NAME-imagedefinitions.json
+      - touch Procfile
+      - echo "web: java -jar application.jar" >> Procfile
+      - python <<EOF
+        import json
+        image_definition = {
+            "name": "$APP_NAME",
+            "imageUri": "$REPOSITORY_URI:$IMAGE_TAG"
+        }
+        with open("target/$APP_NAME-imagedefinitions.json", "w") as f:
+            json.dump([image_definition], f)
+        EOF
 
 artifacts:
   files:
