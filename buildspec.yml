@@ -25,16 +25,17 @@ phases:
     commands:
       - echo Entered the build phase...
       - mvn package
+      - mv target/*.jar .
   post_build:
     commands:
       - echo Entered the post-build phase...
       - mvn test
       - mvn integration-test
+      - echo "web: java -jar application.jar" > Procfile
       - printf '[{"name":"%s","imageUri":"%s"}]' "$APP_NAME" $REPOSITORY_URI:$IMAGE_TAG > target/$APP_NAME-imagedefinitions.json
-      - mv target/*.jar target/application.jar
-      - chmod 644 target/application.jar
 
 artifacts:
   files:
-    - target/application.jar
+    - '*.jar'
+    - Procfile
     - target/$APP_NAME-imagedefinitions.json
