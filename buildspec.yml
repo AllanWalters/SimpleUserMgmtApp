@@ -9,7 +9,7 @@ phases:
   install:
     runtime-versions:
       java: 11
-      python: 3.9
+      python: 3.8
   pre_build:
     commands:
       - echo Entered the pre-build phase...
@@ -34,7 +34,7 @@ phases:
       - mvn integration-test
       - touch Procfile
       - echo "web: java -jar application.jar" >> Procfile
-      - python <<EOF
+      - python3 <<EOF
         import json
         image_definition = {
             "name": "$APP_NAME",
