@@ -1,5 +1,0 @@
-#surefire_0
-#Thu Aug 08 04:21:07 UTC 2024
-basedir=/home/ec2-user/environment/my-spring-boot-app
-user.dir=/home/ec2-user/environment/my-spring-boot-app
-localRepository=/home/ec2-user/.m2/repository
