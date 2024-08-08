@@ -34,7 +34,8 @@ phases:
       - mvn integration-test
       - touch Procfile
       - echo "web: java -jar application.jar" >> Procfile
-      - python3 <<EOF
+      - |
+        python3 <<EOF
         import json
         image_definition = {
             "name": "$APP_NAME",
